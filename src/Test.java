@@ -1,3 +1,5 @@
+// http://playground.arduino.cc/Interfacing/Java
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -6,7 +8,6 @@ import gnu.io.SerialPort;
 import gnu.io.SerialPortEvent;
 import gnu.io.SerialPortEventListener;
 import java.util.Enumeration;
-
 
 public class Test implements SerialPortEventListener {
     SerialPort serialPort;
@@ -36,6 +37,7 @@ public class Test implements SerialPortEventListener {
         //First, Find an instance of serial port as set in PORT_NAMES.
         while (portEnum.hasMoreElements()) {
             CommPortIdentifier currPortId = (CommPortIdentifier) portEnum.nextElement();
+            System.out.println("PORT: " + currPortId.getName());
             for (String portName : PORT_NAMES) {
                 if (currPortId.getName().equals(portName)) {
                     portId = currPortId;
