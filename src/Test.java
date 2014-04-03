@@ -1,30 +1,38 @@
 // http://playground.arduino.cc/Interfacing/Java
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
+import java.io.*;
+
 import gnu.io.CommPortIdentifier;
 import gnu.io.SerialPort;
 import gnu.io.SerialPortEvent;
 import gnu.io.SerialPortEventListener;
 import java.util.Enumeration;
 
+import gnu.io.CommPort;
+import gnu.io.CommPortIdentifier;
+import gnu.io.SerialPort;
+
+
 public class Test implements SerialPortEventListener {
+
+    OutputStream ++;
+
+
     SerialPort serialPort;
     /** The port we're normally going to use. */
     private static final String PORT_NAMES[] = {
             "/dev/tty.usbserial", // Mac OS X
             "/dev/ttyUSB0", // Linux
-            "COM3", // Windows
+            "COM4", // Windows
     };
     /**
      * A BufferedReader which will be fed by a InputStreamReader
      * converting the bytes into characters
      * making the displayed results codepage independent
      */
-    private BufferedReader input;
+     BufferedReader input;
     /** The output stream to the port */
-    private OutputStream output;
+     OutputStream output;
     /** Milliseconds to block while waiting for port open */
     private static final int TIME_OUT = 2000;
     /** Default bits per second for COM port. */
@@ -62,9 +70,12 @@ public class Test implements SerialPortEventListener {
                     SerialPort.PARITY_NONE);
 
             // open the streams
-            input = new BufferedReader(new InputStreamReader(serialPort.getInputStream()));
-            output = serialPort.getOutputStream();
-
+            //input = new BufferedReader(new InputStreamReader(serialPort.getInputStream()));
+            //output = serialPort.getOutputStream();
+            OutputStream out = serialPort.getOutputStream();
+            outSuper=out;
+            (new Thread(new SerialReader(serialPort.getInputStream()))).start();
+            (new Thread(new SerialWriter(serialPort.getOutputStream()))).start();
             // add event listeners
             serialPort.addEventListener(this);
             serialPort.notifyOnDataAvailable(true);
@@ -106,10 +117,84 @@ public class Test implements SerialPortEventListener {
             public void run() {
                 //the following line will keep this app alive for 1000 seconds,
                 //waiting for events to occur and responding to them (printing incoming messages to console).
+
                 try {Thread.sleep(1000000);} catch (InterruptedException ie) {}
             }
         };
         t.start();
+        main.writetoport(" hola mundo ");
         System.out.println("Started");
+
+        main.writetoport(" hola mundo 22");
+        main.writetoport(" hola mundo 3");
+        main.writetoport(" hola mundo w");
     }
+
+
+    public static class SerialReader implements Runnable
+    {
+        InputStream in;
+
+        public SerialReader ( InputStream in )
+        {
+            this.in = in;
+        }
+
+        public void run ()
+        {
+            byte[] buffer = new byte[1024];
+            int len = -1;
+            try
+            {
+                while ( ( len = this.in.read(buffer)) > -1 )
+                {
+                    System.out.print(new String(buffer,0,len));
+                }
+            }
+            catch ( IOException e )
+            {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /** */
+    public static class SerialWriter implements Runnable
+    {
+        OutputStream out;
+
+        public SerialWriter ( OutputStream out )
+        {
+            this.out = out;
+        }
+
+        public void run ()
+        {
+            try
+            {
+                int c = 0;
+                while ( ( c = System.in.read()) > -1 )
+                {
+                    this.out.write(c);
+                }
+            }
+            catch ( IOException e )
+            {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void writetoport(String send) {
+
+        try {
+            outSuper.write(send.getBytes());
+            outSuper.flush();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+
 }
