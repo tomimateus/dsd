@@ -1,21 +1,20 @@
 // http://playground.arduino.cc/Interfacing/Java
 
-import java.io.*;
-
 import gnu.io.CommPortIdentifier;
 import gnu.io.SerialPort;
 import gnu.io.SerialPortEvent;
 import gnu.io.SerialPortEventListener;
-import java.util.Enumeration;
 
-import gnu.io.CommPort;
-import gnu.io.CommPortIdentifier;
-import gnu.io.SerialPort;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Enumeration;
 
 
 public class Test implements SerialPortEventListener {
 
-    OutputStream ++;
+    OutputStream outSuper;
 
 
     SerialPort serialPort;
@@ -23,7 +22,7 @@ public class Test implements SerialPortEventListener {
     private static final String PORT_NAMES[] = {
             "/dev/tty.usbserial", // Mac OS X
             "/dev/ttyUSB0", // Linux
-            "COM4", // Windows
+            "COM6", // Windows
     };
     /**
      * A BufferedReader which will be fed by a InputStreamReader
@@ -39,6 +38,7 @@ public class Test implements SerialPortEventListener {
     private static final int DATA_RATE = 9600;
 
     public void initialize() {
+        //System.setProperty("gnu.io.rxtx.SerialPorts", "/dev/ttyACM0");
         CommPortIdentifier portId = null;
         Enumeration portEnum = CommPortIdentifier.getPortIdentifiers();
 
@@ -122,12 +122,12 @@ public class Test implements SerialPortEventListener {
             }
         };
         t.start();
-        main.writetoport(" hola mundo ");
+        main.writetoport("holamundo ");
         System.out.println("Started");
 
-        main.writetoport(" hola mundo 22");
-        main.writetoport(" hola mundo 3");
-        main.writetoport(" hola mundo w");
+        main.writetoport("holamundo22\\");
+        main.writetoport(" hola m\\");
+        main.writetoport(" hola mundo w\\");
     }
 
 
