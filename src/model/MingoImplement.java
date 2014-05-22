@@ -11,7 +11,7 @@ public class MingoImplement implements MingoCom {
 
     ArrayList<Boolean> actuadores;
     ArrayList<Boolean> sensores;
-    Integer miliseconds;
+    int miliseconds;
 
     public MingoImplement() {
         actuadores=new ArrayList<Boolean>();
@@ -101,7 +101,7 @@ public class MingoImplement implements MingoCom {
     }
 
     @Override
-    public String serializeState() {
+    public char[] serializeState() {
         int intActuadores=0;
         for(int i=0;i<actuadores.size();i++){
             intActuadores+=Math.pow(10,7-i)*(actuadores.get(i)?1:0);
@@ -113,14 +113,18 @@ public class MingoImplement implements MingoCom {
     //    String ret=""+(intActuadores+Math.pow(10,8)*intSensores);
 
        // return String.format("%016d",(long)(intActuadores+Math.pow(10,8)*intSensores))+miliseconds.byteValue();
-        return String.format("%08d",(long)(intActuadores));
-
+        char [] ret= new char[3];
+        //String cuasi= String.format("%08d",(long)(intActuadores));
+        ret[0]=(char) Integer.parseInt(String.format("%08d",(long)(intActuadores)),2);
+        ret[1]=(char) Integer.parseInt(String.format("%08d",(long)(intSensores)),2);
+        ret[2]=(char) miliseconds;
+         return ret;
     }
 
 
     public static void main(String[] args) {
           MingoCom mi=new MingoImplement();
-        mi=mi.cilindroVertical(true).ignorarSensores(true).sensorTope(true).actuadorDeGiro(true);
+        mi=mi.cilindroVertical(true).ignorarSensores(true).sensorGiroIzquierdo(true).cilindroTope(true).manoGiro(true).actuadorDeGiro(true).timeout(33);
         System.out.println(mi.serializeState());
                          //          Byte b= Byte.decode("1001");
 //        System.out.println(b);

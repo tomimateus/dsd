@@ -25,7 +25,7 @@ public interface MingoCom {
 
     public MingoCom sensorTope(boolean estado);
 
-    public String serializeState();
+    public char[] serializeState();
 
     //TODO hacer los demas metodods para comunicacion
 }
